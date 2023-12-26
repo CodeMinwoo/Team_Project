@@ -1,27 +1,15 @@
 const Sequelize = require("sequelize");
 
-class RECOMMENTS extends Sequelize.Model {
+class Recomment extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        user_id: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        recomments: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        profile_img: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
+        content: { type: Sequelize.TEXT },
       },
       {
         sequelize,
         timestamps: true,
-        underscored: false,
-        modelName: "RECOMMENTS",
+        modelName: "Recomment",
         tableName: "recomments",
         paranoid: false,
         charset: "utf8",
@@ -30,11 +18,17 @@ class RECOMMENTS extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.RECOMMENTS.belongsTo(db.COMMENTS, {
-      foreignKey: "recomment_id",
+    db.Recomment.belongsTo(db.Comment, {
+      foreignKey: "comment_id",
       targetKey: "id",
+      onDelete: "CASCADE"
+    });
+    db.Recomment.belongsTo(db.User, {
+      foreignKey: "user_id",
+      targetKey: "id",
+      onDelete: "CASCADE"
     });
   }
 }
 
-module.exports = RECOMMENTS;
+module.exports = Recomment;

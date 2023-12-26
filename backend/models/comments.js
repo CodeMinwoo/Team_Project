@@ -1,27 +1,17 @@
 const Sequelize = require("sequelize");
 
-class COMMENTS extends Sequelize.Model {
+
+
+class Comment extends Sequelize.Model {
   static init(sequelize) {
     return super.init(
       {
-        user_id: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
-        comments_content: {
-          type: Sequelize.TEXT,
-          allowNull: true,
-        },
-        profile_img: {
-          type: Sequelize.STRING,
-          allowNull: true,
-        },
+        content:{type:Sequelize.TEXT}
       },
       {
         sequelize,
         timestamps: true,
-        underscored: false,
-        modelName: "COMMENTS",
+        modelName: "Comment",
         tableName: "comments",
         paranoid: false,
         charset: "utf8",
@@ -30,15 +20,20 @@ class COMMENTS extends Sequelize.Model {
     );
   }
   static associate(db) {
-    db.COMMENTS.belongsTo(db.POST, {
-      foreignKey: "post_primaryKey",
-      targetKey: "id",
+    db.Comment.belongsTo(db.User, {
+      foreignKey: "user_id",
+      targetKey: "id", onDelete: "CASCADE"
     });
-    db.COMMENTS.hasMany(db.RECOMMENTS, {
-      foreignKey: "recomment_id",
-      sourceKey: "id",
-    });
+    db.Comment.belongsTo(db.FreeBoard, {
+        foreignKey: "freeboard_id",
+        targetKey: "id", onDelete: "CASCADE"
+      });
+    db.Comment.hasMany(db.Recomment, {
+        foreignKey: "comment_id",
+        sourceKey: "id",
+        onDelete: "CASCADE",
+      });
   }
 }
 
-module.exports = COMMENTS;
+module.exports = Comment;
